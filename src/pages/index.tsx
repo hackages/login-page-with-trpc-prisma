@@ -1,14 +1,20 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-
+import { useState } from "react";
 import { api } from "../utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { mutate: login } = api.auth.login.useMutation();  
+  const [email, setEmail] = useState('')
 
-  const clickHandler = async () => {
-    return null;
+  const updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    e.preventDefault();
+
+    setEmail(e.target.value)
+  }
+  
+  const loginHandler = async () => {
+    login({ email })
   }
 
   return (
@@ -22,8 +28,8 @@ const Home: NextPage = () => {
         <h1 className="text-white text-xl">Login page with tPRC</h1>
 
         <form action="" className="flex flex-col w-full px-5 gap-5">
-          <input type="text" placeholder="email" className="rounded p-2" />
-          <button onClick={clickHandler} className="text-white p-2 border">Email me this magic link</button>
+          <input type="text" placeholder="email" className="rounded p-2" onChange={updateEmail}/>
+          <button onClick={loginHandler} className="text-white p-2 border">Email me this magic link</button>
         </form>
       </main>
     </>
